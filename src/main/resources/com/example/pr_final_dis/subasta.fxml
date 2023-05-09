@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.pr_final_dis.SubastaController">
+    <GridPane AnchorPane.topAnchor="10" AnchorPane.leftAnchor="10" AnchorPane.rightAnchor="10">
+        <Label text="Identificador del cliente:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+        <Label fx:id="lblIdentificador" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        <Label text="Oferta:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <TextField fx:id="txtOferta" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <Button text="Ofertar" onAction="#realizarOferta" fx:id="btnOfertar" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+        <Button text="Terminar" onAction="#terminarSubasta" fx:id="btnTerminar" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+    </GridPane>
+    <ListView fx:id="listaOfertas" AnchorPane.topAnchor="60" AnchorPane.leftAnchor="10" AnchorPane.bottomAnchor="10" AnchorPane.rightAnchor="10" />
+</AnchorPane>
