@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.GridPane?>
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.example.pr_final_dis.ServidorController">
+    <GridPane>
+        <VBox spacing="10">
+            <HBox spacing="25">
+                <VBox spacing="10">
+                    <HBox spacing="10">
+                        <Label text="Articulo:" />
+                        <TextField fx:id="txtArticulo" />
+                    </HBox>
+                    <HBox spacing="10">
+                        <Label text="Descripcion:" />
+                        <TextField fx:id="txtDescripcion" />
+                    </HBox>
+                    <HBox spacing="10">
+                        <Label text="Valor:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                        <TextField fx:id="txtValor" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                    </HBox>
+                    <Button text="Establecer Articulo" onAction="#setArticulo" fx:id="btnSetArticulo" />
+                </VBox>
+                <VBox spacing="10">
+                    <Label fx:id="lblArticulo" text="Nombre del Articulo" />
+                    <Label fx:id="lblDescripcion" text="Descripcion del Articulo" />
+                    <Label fx:id="lblValor" text="Valor del Articulo" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                    <HBox spacing="10">
+                        <Button text="Iniciar Subasta" onAction="#iniciarSubasta" />
+                        <Button text="Terminar Subasta" onAction="#terminarSubasta" />
+                    </HBox>
+                </VBox>
+            </HBox>
+            <ListView fx:id="listaClientes" VBox.vgrow="ALWAYS" prefWidth="5"/>
+        </VBox>
+    </GridPane>
+</AnchorPane>

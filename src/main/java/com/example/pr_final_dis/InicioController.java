@@ -8,7 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-public class InicioController {
+public class InicioController extends SubastaApp {
 
     @FXML
     private TextField txtIdentificador;

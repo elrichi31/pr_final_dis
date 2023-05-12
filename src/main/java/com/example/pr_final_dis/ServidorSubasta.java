@@ -9,27 +9,46 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServidorSubasta {
+public class ServidorSubasta implements Runnable {
     private int puerto;
-    private List<PrintWriter> escritoresClientes;
+    private List<ManejadorCliente> clientesConectados;
+    private ServidorController controlador;
 
-    public ServidorSubasta(int puerto) {
+    public ServidorSubasta(int puerto, ServidorController controlador) {
         this.puerto = puerto;
-        escritoresClientes = new ArrayList<>();
+        this.controlador = controlador;
+        clientesConectados = new ArrayList<>();
     }
 
-    public void iniciar() {
+    @Override
+    public void run() {
         try (ServerSocket serverSocket = new ServerSocket(puerto)) {
             System.out.println("Servidor de subastas iniciado en el puerto: " + puerto);
             while (true) {
                 Socket clienteSocket = serverSocket.accept();
                 System.out.println("Cliente conectado: " + clienteSocket.getInetAddress());
-                new Thread(new ManejadorCliente(clienteSocket)).start();
+                ManejadorCliente cliente = new ManejadorCliente(clienteSocket);
+                new Thread(cliente).start();
+                clientesConectados.add(cliente);
+                controlador.agregarCliente(clienteSocket.getInetAddress().toString());
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
+    public void iniciarSubasta(String nombre, String descripcion, String valor) {
+        for (ManejadorCliente cliente : clientesConectados) {
+            cliente.enviarMensaje("INICIAR_SUBASTA," + nombre + "," + descripcion + "," + valor);
+        }
+    }
+
+    public void terminarSubasta() {
+        for (ManejadorCliente cliente : clientesConectados) {
+            cliente.enviarMensaje("TERMINAR_SUBASTA");
+        }
+    }
+
 
     private class ManejadorCliente implements Runnable {
         private Socket socket;
@@ -38,28 +57,27 @@ public class ServidorSubasta {
 
         public ManejadorCliente(Socket socket) {
             this.socket = socket;
+            try {
+                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                out = new PrintWriter(socket.getOutputStream(), true);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
         public void run() {
             try {
-                in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                out = new PrintWriter(socket.getOutputStream(), true);
-                escritoresClientes.add(out);
-
                 String mensaje;
                 while ((mensaje = in.readLine()) != null) {
                     System.out.println("Oferta recibida: " + mensaje);
-                    for (PrintWriter escritor : escritoresClientes) {
-                        escritor.println(mensaje);
+                    for (ManejadorCliente cliente : clientesConectados) {
+                        cliente.enviarMensaje(mensaje);
                     }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
-                if (out != null) {
-                    escritoresClientes.remove(out);
-                }
                 try {
                     socket.close();
                 } catch (IOException e) {
@@ -67,10 +85,9 @@ public class ServidorSubasta {
                 }
             }
         }
-    }
 
-    public static void main(String[] args) {
-        ServidorSubasta servidorSubasta = new ServidorSubasta(8080);
-        servidorSubasta.iniciar();
+        public void enviarMensaje(String mensaje) {
+            out.println(mensaje);
+        }
     }
 }

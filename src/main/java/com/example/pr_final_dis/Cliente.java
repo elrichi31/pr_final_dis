@@ -5,7 +5,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class Cliente {
+public class Cliente extends SubastaController {
     private Socket socket;
     private BufferedReader in;
     private PrintWriter out;
@@ -38,7 +38,6 @@ public class Cliente {
         out.close();
         socket.close();
     }
-
     public String getIdentificador() {
         return identificador;
     }
